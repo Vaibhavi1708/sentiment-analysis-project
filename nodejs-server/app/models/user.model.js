@@ -24,9 +24,6 @@ module.exports = (sequelize, Sequelize) => {
     city: {
       type: Sequelize.STRING,
     },
-    token: {
-      type: Sequelize.STRING,
-    },
   });
 
   return User;

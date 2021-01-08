@@ -1,9 +1,11 @@
 const db = require("../models");
-const config = require("../config/auth.config");
+
+const { checkBlacklist } = require("../utils/blacklist.utils");
+
 const User = db.user;
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+let jwt = require("jsonwebtoken");
+let bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   // Save User to Database
@@ -25,7 +27,7 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+exports.login = (req, res) => {
   User.findOne({
     where: {
       email: req.body.email,
@@ -36,7 +38,7 @@ exports.signin = (req, res) => {
         return res.status(404).send({ message: "User Not found." });
       }
 
-      var passwordIsValid = bcrypt.compareSync(
+      const passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
       );
@@ -48,8 +50,13 @@ exports.signin = (req, res) => {
         });
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      let token = jwt.sign({ id: user.id }, process.env.SECRET, {
         expiresIn: 86400, // 24 hours
+      });
+
+      res.cookie("authToken", token, {
+        maxAge: 86400,
+        httpOnly: true,
       });
 
       res.status(200).send({
@@ -64,3 +71,35 @@ exports.signin = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+exports.logout = async (req, res) => {
+  let token = req.headers["x-access-token"];
+  try {
+    const result = await checkBlacklist.verifyTokenInBlacklist(token);
+    console.log(result.status);
+
+    if (result.status == true) {
+      await checkBlacklist.addTokenInBlacklist(token, result.val);
+      return res.status(200).send({
+        message: "Log out successful!",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// checkBlacklist
+//   .verifyTokenInBlacklist(token)
+//   .then((result) => {
+//     if (result.status == true) {
+//       checkBlacklist.addTokenInBlacklist(token, result.val);
+//       return res.status(200).send({
+//         message: "Log out successful!",
+//       });
+//     }
+//   })
+
+//   .catch((err) => {
+//     console.log(err);
+//   });

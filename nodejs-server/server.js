@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use("*", (req, res, next) => {
   if (
     !req.originalUrl.endsWith("/signup") &&
-    !req.originalUrl.endsWith("/signin") &&
+    !req.originalUrl.endsWith("/login") &&
     req.originalUrl.startsWith("/api")
   )
     authJwt.verifyToken(req, res, next);
