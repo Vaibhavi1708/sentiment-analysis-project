@@ -26,12 +26,11 @@ verifyToken = async (req, res, next) => {
 
     const result = await checkBlacklist.verifyTokenInBlacklist(token);
 
-    if (result.status == true) {
+    if (result.status === true) {
       next();
 
       return "You can proceed!";
     } else {
-      next();
       return res.status(401).send({
         message: "Please log in again!",
       });

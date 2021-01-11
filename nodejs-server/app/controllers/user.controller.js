@@ -78,7 +78,7 @@ exports.logout = async (req, res) => {
     const result = await checkBlacklist.verifyTokenInBlacklist(token);
     console.log(result.status);
 
-    if (result.status == true) {
+    if (result.status === true) {
       await checkBlacklist.addTokenInBlacklist(token, result.val);
       return res.status(200).send({
         message: "Log out successful!",
@@ -88,18 +88,3 @@ exports.logout = async (req, res) => {
     console.error(err);
   }
 };
-
-// checkBlacklist
-//   .verifyTokenInBlacklist(token)
-//   .then((result) => {
-//     if (result.status == true) {
-//       checkBlacklist.addTokenInBlacklist(token, result.val);
-//       return res.status(200).send({
-//         message: "Log out successful!",
-//       });
-//     }
-//   })
-
-//   .catch((err) => {
-//     console.log(err);
-//   });

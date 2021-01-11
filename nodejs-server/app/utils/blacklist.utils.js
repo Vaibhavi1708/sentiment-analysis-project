@@ -34,7 +34,7 @@ function verifyTokenInBlacklist(token) {
             }
           }
         } catch (err) {
-          res.status(500).send({ message: err.message });
+          reject(err);
         }
 
         resolve({
