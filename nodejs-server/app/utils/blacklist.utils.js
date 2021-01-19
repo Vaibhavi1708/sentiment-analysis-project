@@ -9,7 +9,7 @@ addTokenInBlacklist = (token, blacklist) => {
 
     client.set("blacklist", JSON.stringify(token_list), redis.print);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    console.log(err)
   }
 };
 

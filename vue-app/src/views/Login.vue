@@ -72,8 +72,9 @@ export default {
         .post("/api/auth/login", formData)
         .then(res => {
           if (res.status === 200) {
+            console.log(res.data.id)
             this.$store.dispatch("login");
-            router.push("/home");
+            this.$router.push({ name: "ProductList", params: {user_id: res.data.id } });
           }
           console.log(res);
         })
@@ -85,13 +86,12 @@ export default {
     },
     onReset(event) {
       event.preventDefault();
-      // Reset our form values
       this.form = getForm();
-      // Trick to reset/clear native browser form validation state
       this.$nextTick(() => {
         this.show = true;
       });
     }
-  }
+  },
+    name: "Login",
 };
 </script>
