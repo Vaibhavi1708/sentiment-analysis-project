@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const publicRoot = "/home/batul/Desktop/Practice/Vue-Product/sentiment-analysis-project/vue-app/dist";
+const publicRoot = "/home/vaibhavi/Documents/Sentiment Analysis/vue-app/dist";
 
 app.use(express.static(publicRoot));
 
@@ -39,16 +39,7 @@ app.get("*", (req, res, next) => {
   } else res.sendFile("index.html", { root: publicRoot });
 });
 
-//simple route
-// app.use("*", (req, res, next) => {
-//   if (
-//     !req.originalUrl.endsWith("/signup") &&
-//     !req.originalUrl.endsWith("/login") &&
-//     req.originalUrl.startsWith("/api")
-//   )
-//     authJwt.verifyToken(req, res, next);
-//   else return next();
-// });
+
 
 require("./app/routes/user.routes")(app);
 require("./app/routes/product.routes")(app);

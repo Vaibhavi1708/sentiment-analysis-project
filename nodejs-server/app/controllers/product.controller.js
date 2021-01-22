@@ -35,3 +35,20 @@ exports.findOne = (req, res) => {
       });
     });
 };
+//Retrieve all products by particular brands
+
+exports.findAllProductsByBrands = (req, res) => {
+  Product.findAll({
+    where: {
+      brand_name: req.query.brand_name
+    },
+  })
+    .then((data) => {
+      res.status(200).send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occured while retrieving products.",
+      });
+    });
+};

@@ -7,13 +7,13 @@
             <h1 class="text-left mt-2">Filters</h1>
 
             <hr />
-            <h5 class="mt-3 font-weight-bold text-left">Brands:</h5>
+            <h5 class="mt-3 font-weight-bold text-left">Brands :</h5>
 
             <b-form-group v-slot="{ ariaDescribedby }" class="mt-3 text-left">
               <b-form-checkbox-group
                 v-model="selected_brands"
                 :options="brandName"
-                value-field="id"
+                value-field="name"
                 text-field="name"
                 :aria-describedby="ariaDescribedby"
                 name="flavour-2a"
@@ -106,7 +106,7 @@
                     <b-col class="font-weight-bold">Brand: </b-col>
                     <b-col>{{ product.brand_name }}</b-col>
                   </b-row>
-                  <b-row v-if="product.overall_rating"  class=" text-left">
+                  <b-row v-if="product.overall_rating" class=" text-left">
                     <b-col class="font-weight-bold">Rating: </b-col>
                     <b-col> {{ product.overall_rating }}</b-col>
                   </b-row>
@@ -143,9 +143,11 @@
   </div>
 </template>
 <script>
-import router from "../router";
-import axios from "axios";
-import { getAllProducts, getAllBrands } from "../services/productService";
+import {
+  getAllProducts,
+  getAllBrands,
+  getProductsByBrands
+} from "../services/productService";
 
 export default {
   data() {
@@ -177,23 +179,21 @@ export default {
     onPageChanged(page) {
       this.paginate(this.perPage, page - 1);
     },
+
     getAllProducts() {
       getAllProducts().then(response => {
-        console.log("Successfully fetched products");
         this.products = response.data;
       });
     },
     getAllBrands() {
       getAllBrands().then(response => {
-        console.log("Successfully fetched brands");
         this.brandName = response.data;
       });
     },
     showDetails(prod_id) {
-      let user_id = window.location.pathname.split("/")[1];
       this.$router.push({
         name: "ProductDetails",
-        params: { user_id: user_id, prod_id: prod_id }
+        params: { prod_id }
       });
     }
   },

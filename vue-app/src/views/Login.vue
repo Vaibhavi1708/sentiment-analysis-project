@@ -43,9 +43,7 @@
 </template>
 
 <script>
-import store from "../store";
-import router from "../router";
-import axios from "axios";
+import { userLogin } from "../services/userService";
 const getForm = () => ({
   email: "",
   password: ""
@@ -68,19 +66,15 @@ export default {
         password: this.form.password
       };
 
-      axios
-        .post("/api/auth/login", formData)
-        .then(res => {
-          if (res.status === 200) {
-            console.log(res.data.id)
-            this.$store.dispatch("login");
-            this.$router.push({ name: "ProductList", params: {user_id: res.data.id } });
+      userLogin(formData)
+        .then(response => {
+          if (response.status === 200) {
+            this.$store.dispatch("setUserId", response.data.id);
+            this.$router.push("/products");
+            window.location.reload();
           }
-          console.log(res);
         })
-
         .catch(error => {
-          console.log(error);
           alert("Invalid email and password!");
         });
     },
@@ -92,6 +86,6 @@ export default {
       });
     }
   },
-    name: "Login",
+  name: "Login"
 };
 </script>

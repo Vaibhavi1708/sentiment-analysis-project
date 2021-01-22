@@ -146,7 +146,10 @@
                 v-model="form.password"
                 placeholder="Enter password *"
                 type="password"
-                v-validate="{ required: true, min: 6, regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).*$/ }"
+                v-validate="{
+                  required: true,
+                  min: 6
+                }"
                 name="password"
                 ref="password"
               ></b-form-input>
@@ -172,7 +175,10 @@
                 data-vv-as="password"
               ></b-form-input>
             </b-form-group>
-            <div class="alert alert-danger" v-show="errors.has('password confirmation')">
+            <div
+              class="alert alert-danger"
+              v-show="errors.has('password confirmation')"
+            >
               <div v-if="errors.has('password confirmation')">
                 {{ errors.first("password confirmation") }}
               </div>
@@ -188,8 +194,7 @@
 </template>
 
 <script>
-import router from "../router";
-import axios from "axios";
+import { userSignup } from "../services/userService";
 const getForm = () => ({
   fname: "",
   lname: "",
@@ -224,28 +229,20 @@ export default {
             address: this.form.address
           };
           event.preventDefault();
-
-          axios
-            .post("/api/auth/signup", formData)
-            .then(res => {
-              alert(JSON.stringify(res.data.message));
-              if (res.status === 200) {
-                router.push("/login");
+          userSignup(formData)
+            .then(response => {
+              if (response.status === 200) {
+                this.$router.push("/login");
               }
-              console.log(res);
             })
-
-            .catch(error => {
-              console.log(error);
-              alert("Email already exist!");
-            });
+            .catch(error => {});
           return;
         }
 
-        alert("Eneterd Invalid Data!");
+        alert("Entered Invalid Data!");
       });
     },
-    
+
     onReset(event) {
       event.preventDefault();
       this.form = getForm();
@@ -254,6 +251,6 @@ export default {
       });
     }
   },
-    name: "Register",
+  name: "Register"
 };
 </script>

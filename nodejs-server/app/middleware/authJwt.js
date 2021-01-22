@@ -7,7 +7,7 @@ const User = db.user;
 
 verifyToken = async (req, res, next) => {
   let token = req.cookies["authToken"];
-  
+
   try {
     if (!token) {
       return res.status(403).send({
@@ -29,16 +29,12 @@ verifyToken = async (req, res, next) => {
 
     if (result.status === true) {
       next();
-
-      //return "You can proceed!";
     } else {
       return res.status(401).send({
         message: "Please log in again!",
       });
     }
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) {}
 };
 
 const authJwt = {

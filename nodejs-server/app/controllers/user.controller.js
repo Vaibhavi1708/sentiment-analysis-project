@@ -1,11 +1,11 @@
-const db = require('../models');
+const db = require("../models");
 
-const { checkBlacklist } = require('../utils/blacklist.utils');
+const { checkBlacklist } = require("../utils/blacklist.utils");
 
 const User = db.user;
 
-let jwt = require('jsonwebtoken');
-let bcrypt = require('bcryptjs');
+let jwt = require("jsonwebtoken");
+let bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   // Save User to Database
@@ -20,7 +20,7 @@ exports.signup = (req, res) => {
     address: req.body.address,
   })
     .then((user) => {
-      res.send({ message: 'User was registered successfully!' });
+      res.send({ message: "User was registered successfully!" });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -35,7 +35,7 @@ exports.login = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'User Not found.' });
+        return res.status(404).send({ message: "User Not found." });
       }
 
       const passwordIsValid = bcrypt.compareSync(
@@ -46,7 +46,7 @@ exports.login = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: 'Invalid Password!',
+          message: "Invalid Password!",
         });
       }
 
@@ -54,7 +54,7 @@ exports.login = (req, res) => {
         expiresIn: 86400, // 24 hours
       });
 
-      res.cookie('authToken', token, {
+      res.cookie("authToken", token, {
         maxAge: 86400,
         httpOnly: true,
       });
@@ -73,17 +73,21 @@ exports.login = (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  let token = req.cookies['authToken'];
+  let token = req.cookies["authToken"];
   try {
     const result = await checkBlacklist.verifyTokenInBlacklist(token);
 
     if (result.status === true) {
       await checkBlacklist.addTokenInBlacklist(token, result.val);
       return res.status(200).send({
-        message: 'Log out successful!',
+        message: "Log out successful!",
       });
     }
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) {}
+};
+
+exports.isLoggedIn = async (req, res) => {
+  try {
+    res.status(200).send(true);
+  } catch (err) {}
 };

@@ -55,9 +55,9 @@
                 </b-row>
                 <b-row class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3"
-                    >Total Reviews:
+                    >Total Reviewers:
                   </b-col>
-                  <b-col> 40,000</b-col>
+                  <b-col> {{ product_details.no_of_reviewers }}</b-col>
                 </b-row>
                 <div>
                   <b-button
@@ -178,8 +178,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { getProductDetails } from "../services/productService";
+import { postComment, getAllComments } from "../services/commentService";
 
 export default {
   data() {
@@ -205,70 +205,44 @@ export default {
       this.nameState = null;
     },
     handleOk(bvModalEvt) {
-      // Prevent modal from closing
       bvModalEvt.preventDefault();
-      // Trigger submit handler
       this.handleSubmit();
     },
     handleSubmit() {
-      // Exit when the form isn't valid
       if (!this.checkFormValidity()) {
         return;
       }
-      // Push the name to submitted names
       this.submittedNames.push(this.name);
-      // Hide the modal manually
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
     },
     getProductDetails() {
-      let prod_id = window.location.pathname.split("/")[3];
-
+      let prod_id = this.$route.params.prod_id;
       getProductDetails(prod_id).then(response => {
-        console.log("Successfully fetched product");
         this.product_details = response.data;
       });
     },
     postComment() {
-      let user_id = window.location.pathname.split("/")[1];
-      let prod_id = window.location.pathname.split("/")[3];
-      console.log(user_id, prod_id);
+      let user_id = this.$store.getters.getUserId;
+      let prod_id = this.$route.params.prod_id;
       const commentData = {
         comment_text: this.comment_text,
         star_rating: this.value
       };
-      console.log(commentData);
 
-      axios
-        .post("/api/postcomment", commentData, { params: { user_id, prod_id } })
-        .then(res => {
-          if (res.status === 200) {
-            console.log(res);
-          }
-        })
-
-        .catch(error => {
-          console.log(error);
-        });
+      postComment(commentData, prod_id, user_id);
     },
     getAllComments() {
-      let prod_id = window.location.pathname.split("/")[3];
-      axios
-        .get("/api/getcomments", { params: { prod_id } })
-        .then(res => {
-          if (res.status === 200) {
-            console.log("API called");
-            console.log(res);
-            this.product_comments = res.data;
-            console.log(this.product_comments);
+      let prod_id = this.$route.params.prod_id;
+      getAllComments(prod_id)
+        .then(response => {
+          if (response.status === 200) {
+            this.product_comments = response.data;
           }
         })
 
-        .catch(error => {
-          console.log(error);
-          alert("Invalid product id");
-        });
+        .catch(error => {});
     }
   },
   name: "ProductDetail",

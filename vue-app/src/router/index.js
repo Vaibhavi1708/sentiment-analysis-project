@@ -14,7 +14,7 @@ const routes = [
     redirect: "/login"
   },
   {
-    path: "/:user_id/products",
+    path: "/products",
     name: "ProductList",
     meta: { requiresAuth: true },
     component: ProductList,
@@ -32,7 +32,7 @@ const routes = [
     component: Register
     },
   {
-    path: "/:user_id/product-detail/:prod_id",
+    path: "/product-detail/:prod_id",
     name: "ProductDetails",
     meta: { requiresAuth: true },
     component: ProductDetails
@@ -44,14 +44,13 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
-router.beforeEach(function(to, _, next) {
-  if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    next("/login");
-  } else if (to.meta.requiresUnauth && store.getters.isAuthenticated) {
-    next("/:user_id/products");
-  } else {
-    next();
-  }
-});
+// router.beforeEach(function(to, _, next) {
+//   if (to.meta.requiresAuth) {
+//     next("/login");
+//   }
+//   else {
+//     next();
+//   }
+// });
 
 export default router;

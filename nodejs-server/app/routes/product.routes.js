@@ -14,4 +14,8 @@ module.exports = function (app) {
 
   //Retrieve a single product with id
   app.get("/api/product/:id", controller.findOne);
+
+  //Retrieve all products by particular brands
+  app.get("/api/productsbybrands", controller.findAllProductsByBrands);
 };
+
