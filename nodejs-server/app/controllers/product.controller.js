@@ -1,10 +1,10 @@
-const db = require('../models');
+const db = require("../models");
 
 const Product = db.product;
 
 // Retrieve all Products from the database.
 exports.findAll = (req, res) => {
-  let token = req.cookies['authToken'];
+  let token = req.cookies["authToken"];
 
   Product.findAll()
 
@@ -14,7 +14,7 @@ exports.findAll = (req, res) => {
 
     .catch((err) => {
       res.status(500).send({
-        message: err.message || 'Some error occured while retrieving products.',
+        message: err.message,
       });
     });
 };
@@ -26,21 +26,21 @@ exports.findOne = (req, res) => {
   Product.findByPk(id)
     .then((data) => {
       if (!data)
-        res.status(400).send({ message: 'Not found product with id: ' + id });
+        res.status(404).send({ message: "Not found product with id: " + id });
       else res.send(data);
     })
     .catch((err) => {
       res.status(500).send({
-        message: 'Some error occured while retrieving product with id: ' + id,
+        message: err.message,
       });
     });
 };
 //Retrieve all products by particular brands
 
-exports.findAllProductsByBrands = (req, res) => {
+exports.findProductsByBrand = (req, res) => {
   Product.findAll({
     where: {
-      brand_name: req.query.brand_name
+      brand_name: req.query.brand_name,
     },
   })
     .then((data) => {
@@ -48,7 +48,7 @@ exports.findAllProductsByBrands = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occured while retrieving products.",
+        message: err.message,
       });
     });
 };

@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const publicRoot = "/home/vaibhavi/Documents/Sentiment Analysis/vue-app/dist";
+const publicRoot = "/home/vaibhavi/Documents/Sentiment Analysis/sentiment-analysis-project/vue-app/dist";
 
 app.use(express.static(publicRoot));
 

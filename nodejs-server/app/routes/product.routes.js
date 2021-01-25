@@ -16,6 +16,6 @@ module.exports = function (app) {
   app.get("/api/product/:id", controller.findOne);
 
   //Retrieve all products by particular brands
-  app.get("/api/productsbybrands", controller.findAllProductsByBrands);
+  app.get("/api/productsbybrands", controller.findProductsByBrand);
 };
 

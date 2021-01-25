@@ -232,9 +232,11 @@ export default {
       };
 
       postComment(commentData, prod_id, user_id);
+      window.location.reload();
     },
     getAllComments() {
       let prod_id = this.$route.params.prod_id;
+
       getAllComments(prod_id)
         .then(response => {
           if (response.status === 200) {

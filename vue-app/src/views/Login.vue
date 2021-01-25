@@ -70,6 +70,7 @@ export default {
         .then(response => {
           if (response.status === 200) {
             this.$store.dispatch("setUserId", response.data.id);
+            this.$store.dispatch("setUserName", response.data.fname);
             this.$router.push("/products");
             window.location.reload();
           }

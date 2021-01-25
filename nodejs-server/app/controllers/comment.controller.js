@@ -11,7 +11,7 @@ exports.postComment = (req, res) => {
     user_id: req.query.user_id,
   })
     .then((data) => {
-      res.send(data);
+      res.status(200).send(data);
     })
 
     .catch((err) => {
@@ -19,7 +19,7 @@ exports.postComment = (req, res) => {
     });
 };
 
-exports.findAllComments = (req, res) => {
+exports.findAll = (req, res) => {
   Comment.findAll({
     where: {
       prod_id: req.query.prod_id,
@@ -32,7 +32,7 @@ exports.findAllComments = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occured while retrieving comments.",
+        message: err.message,
       });
     });
 };

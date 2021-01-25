@@ -9,8 +9,8 @@ module.exports = function (app) {
     next();
   });
 
-  app.post("/api/postcomment", controller.postComment);
-  app.get("/api/getcomments", controller.findAllComments);
+  app.post("/api/comment", controller.postComment);
+  app.get("/api/comment", controller.findAll);
 
   
 };
