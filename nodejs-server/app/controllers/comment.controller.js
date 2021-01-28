@@ -1,38 +1,37 @@
-const db = require("../models");
+const db = require('../models');
 
 const Comment = db.comment;
 
-exports.postComment = (req, res) => {
-  Comment.create({
-    comment_text: req.body.comment_text,
-    star_rating: req.body.star_rating,
+exports.postComment = async (req, res) => {
+  try {
+    const data = await Comment.create({
+      comment_text: req.body.comment_text,
+      star_rating: req.body.star_rating,
+      rating: rating,
+      prod_id: req.query.prod_id,
 
-    prod_id: req.query.prod_id,
-    user_id: req.query.user_id,
-  })
-    .then((data) => {
-      res.status(200).send(data);
-    })
-
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
+      user_id: req.query.user_id,
     });
+
+    return res.status(200).send(data);
+  } catch (err) {}
 };
 
-exports.findAll = (req, res) => {
-  Comment.findAll({
-    where: {
-      prod_id: req.query.prod_id,
-    },
+exports.findAllComments = async (req, res) => {
+  try {
+    const data = await Comment.findAll({
+      where: {
+        prod_id: req.query.prod_id,
+      },
 
-    attributes: ["prod_id", "comment_text", "star_rating", "rating"],
-  })
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message,
-      });
+      attributes: [
+        'prod_id',
+        'comment_text',
+        'star_rating',
+        'rating',
+        'user_id',
+      ],
     });
+    return res.status(200).send(data);
+  } catch (err) {}
 };

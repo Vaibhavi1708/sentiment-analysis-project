@@ -9,5 +9,5 @@ module.exports = function (app) {
     next();
   });
 
-  app.get("/api/brand", controller.findAll);
+  app.get("/api/brand", controller.findAllBrands);
 };

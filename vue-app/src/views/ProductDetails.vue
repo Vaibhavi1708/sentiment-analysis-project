@@ -25,28 +25,31 @@
                   <b-col class="font-weight-bold" cols="3">Rating: </b-col>
                   <b-col>{{ product_details.overall_rating }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
+                <b-row
+                  v-if="product_details.internal_memory"
+                  class=" text-left pt-2"
+                >
                   <b-col class="font-weight-bold" cols="3">Memory: </b-col>
                   <b-col> {{ product_details.internal_memory }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
+                <b-row v-if="product_details.battery" class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3">Battery: </b-col>
                   <b-col>{{ product_details.battery }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
+                <b-row v-if="product_details.cpu" class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3">CPU: </b-col>
                   <b-col>{{ product_details.cpu }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
+                <b-row v-if="product_details.os" class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3">OS: </b-col>
                   <b-col>{{ product_details.os }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
+                <b-row v-if="product_details.camera" class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3">Camera: </b-col>
                   <b-col>{{ product_details.camera }}</b-col>
                 </b-row>
-                <b-row class=" text-left pt-2">
-                  <b-col class="font-weight-bold" cols="3">Ram: </b-col>
+                <b-row v-if="product_details.ram" class=" text-left pt-2">
+                  <b-col class="font-weight-bold" cols="3">RAM: </b-col>
                   <b-col>{{ product_details.ram }}</b-col>
                 </b-row>
                 <b-row class=" text-left pt-2">
@@ -55,9 +58,9 @@
                 </b-row>
                 <b-row class=" text-left pt-2">
                   <b-col class="font-weight-bold" cols="3"
-                    >Total Reviewers:
+                    >Total Reviews:
                   </b-col>
-                  <b-col> {{ product_details.no_of_reviewers }}</b-col>
+                  <b-col> {{ product_details.no_of_reviews }}</b-col>
                 </b-row>
                 <div>
                   <b-button
@@ -173,6 +176,24 @@
           </b-collapse>
         </b-card>
       </div>
+      <b-alert
+        v-model="showSuccessAlert"
+        class="position-fixed fixed-top m-0 rounded-0"
+        style="z-index: 2000;"
+        variant="success"
+        dismissible
+      >
+        {{ msg }}
+      </b-alert>
+      <b-alert
+        v-model="showDangerAlert"
+        class="position-fixed fixed-top m-0 rounded-0"
+        style="z-index: 2000;"
+        variant="danger"
+        dismissible
+      >
+        {{ msg }}
+      </b-alert>
     </b-container>
   </div>
 </template>
@@ -190,7 +211,10 @@ export default {
       nameState: null,
       submittedNames: [],
       product_details: [],
-      product_comments: []
+      product_comments: [],
+      showDangerAlert: false,
+      showSuccessAlert: false,
+      msg: ""
     };
   },
   name: "ProductDetails",
@@ -216,41 +240,50 @@ export default {
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
+      this.msg = "Order Placed Successfully!!";
+      this.showSuccessAlert = true;
     },
-    getProductDetails() {
-      let prod_id = this.$route.params.prod_id;
-      getProductDetails(prod_id).then(response => {
+    async getProductDetails() {
+      try {
+        let prod_id = this.$route.params.prod_id;
+        const response = await getProductDetails(prod_id);
         this.product_details = response.data;
-      });
+      } catch (err) {}
     },
-    postComment() {
-      let user_id = this.$store.getters.getUserId;
-      let prod_id = this.$route.params.prod_id;
-      const commentData = {
-        comment_text: this.comment_text,
-        star_rating: this.value
-      };
+    async postComment() {
+      try {
+        if (this.value != null) {
+          let user_id = this.$store.getters.getUserId;
+          let prod_id = this.$route.params.prod_id;
+          const commentData = {
+            comment_text: this.comment_text,
+            star_rating: this.value
+          };
 
-      postComment(commentData, prod_id, user_id);
-      window.location.reload();
+          await postComment(commentData, prod_id, user_id);
+          window.location.reload();
+        } else {
+          this.msg = "Please Give star rating to product!";
+          this.showDangerAlert = true;
+        }
+      } catch (err) {}
     },
-    getAllComments() {
-      let prod_id = this.$route.params.prod_id;
+    async getAllComments() {
+      try {
+        let prod_id = this.$route.params.prod_id;
 
-      getAllComments(prod_id)
-        .then(response => {
-          if (response.status === 200) {
-            this.product_comments = response.data;
-          }
-        })
+        const response = await getAllComments(prod_id);
 
-        .catch(error => {});
+        if (response.status === 200) {
+          this.product_comments = response.data;
+        }
+      } catch (err) {}
     }
   },
   name: "ProductDetail",
-  mounted() {
-    this.getProductDetails();
-    this.getAllComments();
+  async mounted() {
+    await this.getProductDetails();
+    await this.getAllComments();
   }
 };
 </script>

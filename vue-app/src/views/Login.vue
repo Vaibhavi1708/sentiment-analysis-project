@@ -38,6 +38,15 @@
           </b-form>
         </b-col>
       </b-row>
+      <b-alert
+        v-model="showAlert"
+        class="position-fixed fixed-top m-0 rounded-0"
+        style="z-index: 2000;"
+        variant="danger"
+        dismissible
+      >
+        {{ msg }}
+      </b-alert>
     </b-container>
   </div>
 </template>
@@ -52,39 +61,43 @@ export default {
   data() {
     return {
       form: getForm(),
-      show: true
+      show: true,
+      showAlert: false,
+      msg:''
     };
   },
 
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
+    async onSubmit(event) {
+      try {
+        event.preventDefault();
 
-      const formData = {
-        email: this.form.email,
+        const formData = {
+          email: this.form.email,
 
-        password: this.form.password
-      };
+          password: this.form.password
+        };
 
-      userLogin(formData)
-        .then(response => {
-          if (response.status === 200) {
-            this.$store.dispatch("setUserId", response.data.id);
-            this.$store.dispatch("setUserName", response.data.fname);
-            this.$router.push("/products");
-            window.location.reload();
-          }
-        })
-        .catch(error => {
-          alert("Invalid email and password!");
-        });
+        const response = await userLogin(formData);
+        if (response.status === 200) {
+          this.$store.dispatch("setUserId", response.data.id);
+          this.$store.dispatch("setUserName", response.data.fname);
+          this.$router.push("/products");
+          window.location.reload();
+        }
+      } catch (err) {
+        this.msg = 'Invalid Email and Password!!'
+        this.showAlert = true;
+      }
     },
-    onReset(event) {
-      event.preventDefault();
-      this.form = getForm();
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    async onReset(event) {
+      try {
+        event.preventDefault();
+        this.form = getForm();
+        this.$nextTick(() => {
+          this.show = true;
+        });
+      } catch (err) {}
     }
   },
   name: "Login"

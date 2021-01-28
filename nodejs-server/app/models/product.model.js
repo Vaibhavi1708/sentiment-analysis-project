@@ -36,6 +36,9 @@ module.exports = (sequelize, Sequelize) => {
     overall_rating: {
       type: Sequelize.STRING,
     },
+    no_of_reviews:{
+      type: Sequelize.STRING,
+    },
   });
 
   return Product;

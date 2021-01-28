@@ -189,6 +189,15 @@
           </b-form>
         </b-col>
       </b-row>
+      <b-alert
+        v-model="showAlert"
+        class="position-fixed fixed-top m-0 rounded-0"
+        style="z-index: 2000;"
+        variant="danger"
+        dismissible
+      >
+        {{ msg }}
+      </b-alert>
     </b-container>
   </div>
 </template>
@@ -211,14 +220,17 @@ export default {
     return {
       form: getForm(),
       genders: [{ text: "Male", value: "Male" }, "Female", "Other"],
-      show: true
+      show: true,
+      showAlert: false,
+      msg:''
     };
   },
   methods: {
-    validateBeforeSubmit() {
-      this.$validator.validateAll().then(result => {
+    async validateBeforeSubmit() {
+      try {
+        const result = await this.$validator.validateAll();
         if (result) {
-          const formData = {
+          const formData = await {
             fname: this.form.fname,
             lname: this.form.lname,
             email: this.form.email,
@@ -229,18 +241,19 @@ export default {
             address: this.form.address
           };
           event.preventDefault();
-          userSignup(formData)
-            .then(response => {
-              if (response.status === 200) {
-                this.$router.push("/login");
-              }
-            })
-            .catch(error => {});
+          const response = await userSignup(formData);
+
+          if (response.status === 200) {
+            this.$router.push("/login");
+          }
           return;
         }
-
-        alert("Entered Invalid Data!");
-      });
+        this.msg = 'Entered Invalid Data!'
+        this.showAlert = true;
+      } catch (err) {
+        this.msg = 'Email Already Exist'
+        this.showAlert = true;
+      }
     },
 
     onReset(event) {

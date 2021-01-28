@@ -1,4 +1,5 @@
 const db = require("../models");
+const { emailAlreadyExist } = require('../utils/error');
 const User = db.user;
 
 checkDuplicateEmail = (req, res, next) => {
@@ -10,7 +11,7 @@ checkDuplicateEmail = (req, res, next) => {
   }).then((user) => {
     if (user) {
       res.status(409).send({
-        message: "Failed! Email is already in use!",
+        message: emailAlreadyExist(),
       });
       return;
     }

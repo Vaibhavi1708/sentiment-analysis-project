@@ -1,17 +1,17 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 const app = express();
 
-const db = require("./app/models");
+const db = require('./app/models');
 db.sequelize.sync();
 
-const authJwt = require("./app/middleware");
+const authJwt = require('./app/middleware');
 
 var corsOptions = {
-  origin: "http://localhost:8081",
+  origin: 'http://localhost:8081',
 };
 
 app.use(cors(corsOptions));
@@ -24,27 +24,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const publicRoot = "/home/vaibhavi/Documents/Sentiment Analysis/sentiment-analysis-project/vue-app/dist";
+const publicRoot =
+  '/home/batul/Desktop/PList/sentiment-analysis-project/vue-app/dist';
 
 app.use(express.static(publicRoot));
 
-app.get("*", (req, res, next) => {
+app.get('*', (req, res, next) => {
   if (
-    !req.originalUrl.endsWith("/signup") &&
-    !req.originalUrl.endsWith("/login") &&
-    req.originalUrl.startsWith("/api")
+    !req.originalUrl.endsWith('/signup') &&
+    !req.originalUrl.endsWith('/login') &&
+    req.originalUrl.startsWith('/api')
   ) {
     authJwt.verifyToken(req, res, next);
-    
-  } else res.sendFile("index.html", { root: publicRoot });
+  } else res.sendFile('index.html', { root: publicRoot });
 });
 
-
-
-require("./app/routes/user.routes")(app);
-require("./app/routes/product.routes")(app);
-require("./app/routes/brand.routes")(app);
-require("./app/routes/comment.routes")(app);
+require('./app/routes/user.routes')(app);
+require('./app/routes/product.routes')(app);
+require('./app/routes/brand.routes')(app);
+require('./app/routes/comment.routes')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

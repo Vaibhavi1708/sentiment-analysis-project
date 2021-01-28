@@ -1,54 +1,30 @@
-const db = require("../models");
-
+const db = require('../models');
+const { Op } = require('sequelize');
+const { notFound } = require('../utils/error')
 const Product = db.product;
 
 // Retrieve all Products from the database.
-exports.findAll = (req, res) => {
-  let token = req.cookies["authToken"];
+exports.findAllProducts = async (req, res) => {
+  try {
+    let token = req.cookies['authToken'];
 
-  Product.findAll()
+    const data = await Product.findAll();
 
-    .then((data) => {
-      res.status(200).send(data);
-    })
-
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message,
-      });
-    });
+    return res.status(200).send(data);
+  } catch (err) {}
 };
 
 // Find a single Product with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
+exports.findOneProduct = async (req, res) => {
+  try {
+    const id = req.params.id;
 
-  Product.findByPk(id)
-    .then((data) => {
-      if (!data)
-        res.status(404).send({ message: "Not found product with id: " + id });
-      else res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message,
-      });
-    });
+    const data = await Product.findByPk(id);
+    if (!data)
+      return res
+        .status(404)
+        .send({ message: notFound("product",id) });
+    else return res.send(data);
+  } catch (err) {}
 };
-//Retrieve all products by particular brands
 
-exports.findProductsByBrand = (req, res) => {
-  Product.findAll({
-    where: {
-      brand_name: req.query.brand_name,
-    },
-  })
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message,
-      });
-    });
-};

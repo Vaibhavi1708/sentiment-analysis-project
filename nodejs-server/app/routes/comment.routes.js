@@ -10,7 +10,7 @@ module.exports = function (app) {
   });
 
   app.post("/api/comment", controller.postComment);
-  app.get("/api/comment", controller.findAll);
+  app.get("/api/comment", controller.findAllComments);
 
   
 };

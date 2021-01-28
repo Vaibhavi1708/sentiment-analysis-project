@@ -9,13 +9,8 @@ module.exports = function (app) {
     next();
   });
 
-  //Retrieve all products
-  app.get("/api/product", controller.findAll);
+  app.get("/api/product", controller.findAllProducts);
 
-  //Retrieve a single product with id
-  app.get("/api/product/:id", controller.findOne);
-
-  //Retrieve all products by particular brands
-  app.get("/api/productsbybrands", controller.findProductsByBrand);
+  app.get("/api/product/:id", controller.findOneProduct);
 };
 

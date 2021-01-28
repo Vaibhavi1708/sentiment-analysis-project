@@ -1,4 +1,4 @@
-const redis = require("redis");
+const redis = require('redis');
 const client = redis.createClient();
 
 addTokenInBlacklist = (token, blacklist) => {
@@ -8,13 +8,13 @@ addTokenInBlacklist = (token, blacklist) => {
 
     token_list.push(token);
 
-    client.set("blacklist", JSON.stringify(token_list), redis.print);
+    client.set('blacklist', JSON.stringify(token_list), redis.print);
   } catch (err) {}
 };
 
 function verifyTokenInBlacklist(token) {
   return new Promise(async (resolve, reject) => {
-    client.get("blacklist", (err, val) => {
+    client.get('blacklist', (err, val) => {
       if (err) {
         reject(err);
       } else {

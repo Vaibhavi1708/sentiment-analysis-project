@@ -1,15 +1,10 @@
-const db = require("../models");
+const db = require('../models');
 
 const Brand = db.brand;
 
-exports.findAll = (req, res) => {
-  Brand.findAll()
-    .then((data) => {
-      res.status(200).send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message,
-      });
-    });
+exports.findAllBrands = async (req, res) => {
+  try {
+    const data = await Brand.findAll();
+    return res.status(200).send(data);
+  } catch (err) {}
 };

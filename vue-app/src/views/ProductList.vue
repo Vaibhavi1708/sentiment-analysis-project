@@ -13,7 +13,7 @@
               <b-form-checkbox-group
                 v-model="selected_brands"
                 :options="brandName"
-                value-field="name"
+                value-field="id"
                 text-field="name"
                 :aria-describedby="ariaDescribedby"
                 name="flavour-2a"
@@ -51,14 +51,14 @@
                 v-model="selectedPrice"
                 :aria-describedby="ariaDescribedby"
                 name="some-radios"
-                value="3"
+                value="4"
                 >30,000 - 40,000</b-form-radio
               >
               <b-form-radio
                 v-model="selectedPrice"
                 :aria-describedby="ariaDescribedby"
                 name="some-radios"
-                value="4"
+                value="5"
                 >Over 40,000</b-form-radio
               >
             </b-form-group>
@@ -76,6 +76,9 @@
             ></b-form-rating>
 
             <hr />
+            <b-button href="#" variant="primary"
+              >Apply Filter</b-button
+            >
           </div>
         </b-col>
 
@@ -146,22 +149,23 @@
 import {
   getAllProducts,
   getAllBrands,
-  getProductsByBrands
 } from "../services/productService";
 
 export default {
   data() {
     return {
       products: [],
+      value: null,
+      start_price: null,
+      end_price: null,
       paginatedItems: this.products,
       currentPage: 1,
       perPage: 6,
       selectedPrice: "",
-      selected_brands: [], // Must be an array reference!
+      selected_brands: [],
       brandName: []
     };
   },
-
   computed: {
     rows() {
       return this.products.length;
@@ -180,16 +184,15 @@ export default {
       this.paginate(this.perPage, page - 1);
     },
 
-    getAllProducts() {
-      getAllProducts().then(response => {
-        this.products = response.data;
-      });
+    async getAllProducts() {
+      const response = await getAllProducts();
+      this.products = response.data;
     },
-    getAllBrands() {
-      getAllBrands().then(response => {
-        this.brandName = response.data;
-      });
+    async getAllBrands() {
+      const response = await getAllBrands();
+      this.brandName = response.data;
     },
+
     showDetails(prod_id) {
       this.$router.push({
         name: "ProductDetails",
@@ -200,10 +203,10 @@ export default {
 
   name: "ProductList",
   components: {},
-  mounted() {
-    this.getAllProducts();
-    this.getAllBrands();
-    this.paginate(this.perPage, 0);
+  async mounted() {
+    await this.getAllProducts();
+    await this.getAllBrands();
+    await this.paginate(this.perPage, 0);
   }
 };
 </script>

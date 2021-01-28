@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const { checkBlacklist } = require("../utils/blacklist.utils");
+const { unauthorized } = require('../utils/error');
 
 const db = require("../models");
 const User = db.user;
@@ -11,7 +12,7 @@ verifyToken = async (req, res, next) => {
   try {
     if (!token) {
       return res.status(403).send({
-        message: "No token provided!",
+        message: unauthorized(),
       });
     }
 
@@ -31,7 +32,7 @@ verifyToken = async (req, res, next) => {
       next();
     } else {
       return res.status(401).send({
-        message: "Please log in again!",
+        message: unauthorized(),
       });
     }
   } catch (err) {}
