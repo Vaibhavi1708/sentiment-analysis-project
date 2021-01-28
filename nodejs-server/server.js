@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const publicRoot =
-  '/home/batul/Desktop/PList/sentiment-analysis-project/vue-app/dist';
+  '/home/batul/Desktop/FinalProject/sentiment-analysis-project/vue-app/dist';
 
 app.use(express.static(publicRoot));
 

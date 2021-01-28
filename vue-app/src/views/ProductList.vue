@@ -76,7 +76,8 @@
             ></b-form-rating>
 
             <hr />
-            <b-button href="#" variant="primary"
+
+            <b-button href="#" variant="primary" @click="filterProducts()"
               >Apply Filter</b-button
             >
           </div>
@@ -149,6 +150,7 @@
 import {
   getAllProducts,
   getAllBrands,
+  getProductsByFilters
 } from "../services/productService";
 
 export default {
@@ -156,6 +158,8 @@ export default {
     return {
       products: [],
       value: null,
+      start_price: null,
+      end_price: null,
       paginatedItems: this.products,
       currentPage: 1,
       perPage: 6,
@@ -191,6 +195,33 @@ export default {
       this.brandName = response.data;
     },
 
+    // Filter Products
+    async filterProducts() {
+      if (this.selectedPrice == 1) {
+        this.start_price = 0;
+        this.end_price = 10000;
+      } else if (this.selectedPrice == 2) {
+        this.start_price = 10000;
+        this.end_price = 20000;
+      } else if (this.selectedPrice == 3) {
+        this.start_price = 20000;
+        this.end_price = 30000;
+      } else if (this.selectedPrice == 4) {
+        this.start_price = 30000;
+        this.end_price = 40000;
+      } else if (this.selectedPrice == 5) {
+        this.start_price = 40000;
+        this.end_price = 10000000;
+      }
+      const response = await getProductsByFilters(
+        this.selected_brands,
+        this.start_price,
+        this.end_price,
+        this.value
+      );
+      this.products = await response.data;
+      await this.paginate(this.perPage, 0);
+    },
     showDetails(prod_id) {
       this.$router.push({
         name: "ProductDetails",
