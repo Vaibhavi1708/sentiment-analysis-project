@@ -7,9 +7,7 @@ exports.postComment = async (req, res) => {
     const data = await Comment.create({
       comment_text: req.body.comment_text,
       star_rating: req.body.star_rating,
-      rating: rating,
       prod_id: req.query.prod_id,
-
       user_id: req.query.user_id,
     });
 

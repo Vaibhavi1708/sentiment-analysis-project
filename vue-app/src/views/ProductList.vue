@@ -156,8 +156,6 @@ export default {
     return {
       products: [],
       value: null,
-      start_price: null,
-      end_price: null,
       paginatedItems: this.products,
       currentPage: 1,
       perPage: 6,
