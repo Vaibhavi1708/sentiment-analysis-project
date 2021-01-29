@@ -38,14 +38,21 @@
           </b-form>
         </b-col>
       </b-row>
+      <b-alert
+        v-model="showAlert"
+        class="position-fixed fixed-top m-0 rounded-0"
+        style="z-index: 2000;"
+        variant="danger"
+        dismissible
+      >
+        {{ msg }}
+      </b-alert>
     </b-container>
   </div>
 </template>
 
 <script>
-import store from "../store";
-import router from "../router";
-import axios from "axios";
+import { userLogin } from "../services/userService";
 const getForm = () => ({
   email: "",
   password: ""
@@ -54,44 +61,45 @@ export default {
   data() {
     return {
       form: getForm(),
-      show: true
+      show: true,
+      showAlert: false,
+      msg:''
     };
   },
 
   methods: {
-    onSubmit(event) {
-      event.preventDefault();
+    async onSubmit(event) {
+      try {
+        event.preventDefault();
 
-      const formData = {
-        email: this.form.email,
+        const formData = {
+          email: this.form.email,
 
-        password: this.form.password
-      };
+          password: this.form.password
+        };
 
-      axios
-        .post("/api/auth/login", formData)
-        .then(res => {
-          if (res.status === 200) {
-            this.$store.dispatch("login");
-            router.push("/home");
-          }
-          console.log(res);
-        })
-
-        .catch(error => {
-          console.log(error);
-          alert("Invalid email and password!");
-        });
+        const response = await userLogin(formData);
+        if (response.status === 200) {
+          this.$store.dispatch("setUserId", response.data.id);
+          this.$store.dispatch("setUserName", response.data.fname);
+          this.$router.push("/products");
+          window.location.reload();
+        }
+      } catch (err) {
+        this.msg = 'Invalid Email and Password!!'
+        this.showAlert = true;
+      }
     },
-    onReset(event) {
-      event.preventDefault();
-      // Reset our form values
-      this.form = getForm();
-      // Trick to reset/clear native browser form validation state
-      this.$nextTick(() => {
-        this.show = true;
-      });
+    async onReset(event) {
+      try {
+        event.preventDefault();
+        this.form = getForm();
+        this.$nextTick(() => {
+          this.show = true;
+        });
+      } catch (err) {}
     }
-  }
+  },
+  name: "Login"
 };
 </script>

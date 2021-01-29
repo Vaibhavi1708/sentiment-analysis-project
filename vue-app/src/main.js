@@ -4,15 +4,19 @@ import "./plugins/bootstrap-vue";
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from './plugins/axios.js'
 import store from './store'
+import VeeValidate from "vee-validate";
+
 
 Vue.config.productionTip = false
+Vue.use(VeeValidate);
 
-/* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
+  axios,
   components: { App },
   template: '<App/>'
 })

@@ -1,6 +1,10 @@
 import Vue from "vue";
-import Home from "../views/Home.vue";
+import ProductList from "../views/ProductList.vue";
+import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
+import ProductDetails from "../views/ProductDetails.vue";
 import VueRouter from "vue-router";
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -11,18 +15,27 @@ const routes = [
   },
   {
     path: "/products",
-    name: "Home",
-    component: Home
+    name: "ProductList",
+    meta: { requiresAuth: true },
+    component: ProductList,
   },
   {
     path: "/login",
-    name: "About",
-    component: () => import("../views/Login.vue")
+    name: "Login",
+    meta: { requiresUnauth: true },
+    component: Login
   },
   {
     path: "/register",
     name: "Register",
-    component: () => import("../views/Register.vue")
+    meta: { requiresUnauth: true },
+    component: Register
+    },
+  {
+    path: "/product-detail/:prod_id",
+    name: "ProductDetails",
+    meta: { requiresAuth: true },
+    component: ProductDetails
   }
 ];
 

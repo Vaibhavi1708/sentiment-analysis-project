@@ -20,4 +20,7 @@ module.exports = function (app) {
 
   app.post("/api/auth/login", controller.login);
   app.get("/api/auth/logout", controller.logout);
+  app.get("/api/auth/isloggedin", controller.isLoggedIn);
+
+  
 };

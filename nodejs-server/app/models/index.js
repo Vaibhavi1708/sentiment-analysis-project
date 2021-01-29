@@ -14,6 +14,10 @@ const sequelize = new Sequelize(
       acquire: process.env.acquire,
       idle: process.env.idle,
     },
+    define: {
+      timestamps: false,
+      freezeTableName: true
+    },
   }
 );
 
@@ -23,5 +27,11 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("./user.model.js")(sequelize, Sequelize);
+db.product = require("./product.model.js")(sequelize, Sequelize);
+db.brand = require("./brand.model.js")(sequelize, Sequelize);
+db.comment = require("./comment.model.js")(sequelize, Sequelize);
+
+
+
 
 module.exports = db;
