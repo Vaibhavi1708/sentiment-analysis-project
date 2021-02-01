@@ -24,10 +24,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-const publicRoot =
-  '/home/batul/Desktop/FinalProject/sentiment-analysis-project/vue-app/dist';
+const serveStatic = require('serve-static');
+const path = __dirname + '/dist/';
 
-app.use(express.static(publicRoot));
+app.use(serveStatic(path));
 
 app.get('*', (req, res, next) => {
   if (
@@ -36,7 +36,7 @@ app.get('*', (req, res, next) => {
     req.originalUrl.startsWith('/api')
   ) {
     authJwt.verifyToken(req, res, next);
-  } else res.sendFile('index.html', { root: publicRoot });
+  } else res.sendFile(path + 'index.html');
 });
 
 require('./app/routes/user.routes')(app);

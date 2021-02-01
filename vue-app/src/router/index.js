@@ -16,25 +16,21 @@ const routes = [
   {
     path: "/products",
     name: "ProductList",
-    meta: { requiresAuth: true },
     component: ProductList,
   },
   {
     path: "/login",
     name: "Login",
-    meta: { requiresUnauth: true },
     component: Login
   },
   {
     path: "/register",
     name: "Register",
-    meta: { requiresUnauth: true },
     component: Register
     },
   {
     path: "/product-detail/:prod_id",
     name: "ProductDetails",
-    meta: { requiresAuth: true },
     component: ProductDetails
   }
 ];

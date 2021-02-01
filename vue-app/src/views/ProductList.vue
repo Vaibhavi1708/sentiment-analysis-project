@@ -1,10 +1,10 @@
 <template>
-  <div class="mt-5 ml-0">
+  <div class="mt-5 mb-3 ml-0">
     <b-container class="bv-example-row">
       <b-row>
         <b-col cols="3" class="mycontent-left">
           <div>
-            <h1 class="text-left mt-2">Filters</h1>
+            <h3 class="text-left mt-2">Filters</h3>
 
             <hr />
             <h5 class="mt-3 font-weight-bold text-left">Brands :</h5>
@@ -87,7 +87,9 @@
           <b-row>
             <b-col
               cols="12"
-              sm="4"
+              lg="4"
+              md="6"
+              sm="12"
               class="my-1"
               :key="index"
               v-for="(product, index) in paginatedItems"

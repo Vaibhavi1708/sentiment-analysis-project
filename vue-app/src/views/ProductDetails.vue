@@ -167,8 +167,7 @@
                 :key="index"
                 v-for="(product_comment, index) in product_comments"
               >
-                <b-card-text class="font-weight-bold">Name of User</b-card-text>
-                <b-card-text>{{ product_comment.star_rating }}</b-card-text>
+                <b-card-text class="font-weight-bold">Stars: <span>{{ product_comment.star_rating }}</span></b-card-text>
                 <b-card-text>{{ product_comment.comment_text }}</b-card-text>
                 <hr />
               </div>
