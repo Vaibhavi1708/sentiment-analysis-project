@@ -12,5 +12,8 @@ module.exports = function (app) {
   app.get("/api/product", controller.findAllProducts);
 
   app.get("/api/product/:id", controller.findOneProduct);
+
+  app.get("/api/productsbyfilters", controller.findProductsByFilters);
+
 };
 

@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="mt-0">
-    <b-navbar toggleable="lg" type="primary" variant="light">
-      <b-navbar-brand href="#">Logo</b-navbar-brand>
+    <b-navbar toggleable="lg" type="light" variant="light">
+      <b-navbar-brand :href="'/products'">MobileSHOP</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -10,17 +10,23 @@
         <b-navbar-nav class="ml-auto">
           <b-navbar-nav>
             <b-nav-item v-if="!isLogIn">
-              <router-link to="/login"> Login</router-link></b-nav-item
+              <router-link to="/login">
+                Login</router-link
+              ></b-nav-item
             >
           </b-navbar-nav>
           <b-navbar-nav>
             <b-nav-item v-if="!isLogIn">
-              <router-link to="/register"> Register</router-link></b-nav-item
+              <router-link to="/register">
+                Register</router-link
+              ></b-nav-item
             >
           </b-navbar-nav>
           <b-navbar-nav>
             <b-nav-item v-if="isLogIn">
-              <a href="#" v-on:click="setLogout">Logout</a>
+              <a href="#" v-on:click="setLogout"
+                >Logout</a
+              >
             </b-nav-item>
           </b-navbar-nav>
         </b-navbar-nav>
@@ -68,14 +74,5 @@ export default {
 }
 #nav {
   padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>

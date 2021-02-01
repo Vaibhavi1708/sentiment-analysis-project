@@ -17,3 +17,9 @@ export async function getProductDetails(prod_id) {
 
   return await response;
 }
+
+export async function getProductsByFilters(brand_id, start_price, end_price, start_rating) {
+  const response = axios.get("/api/productsbyfilters",{ params: { brand_id, start_price, end_price, start_rating } })
+
+  return await response;
+}

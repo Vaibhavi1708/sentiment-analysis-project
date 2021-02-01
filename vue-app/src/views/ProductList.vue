@@ -1,10 +1,10 @@
 <template>
-  <div class="mt-5 ml-0">
+  <div class="mt-5 mb-3 ml-0">
     <b-container class="bv-example-row">
       <b-row>
         <b-col cols="3" class="mycontent-left">
           <div>
-            <h1 class="text-left mt-2">Filters</h1>
+            <h3 class="text-left mt-2">Filters</h3>
 
             <hr />
             <h5 class="mt-3 font-weight-bold text-left">Brands :</h5>
@@ -76,7 +76,8 @@
             ></b-form-rating>
 
             <hr />
-            <b-button href="#" variant="primary"
+
+            <b-button href="#" variant="primary" @click="filterProducts()"
               >Apply Filter</b-button
             >
           </div>
@@ -86,7 +87,9 @@
           <b-row>
             <b-col
               cols="12"
-              sm="4"
+              lg="4"
+              md="6"
+              sm="12"
               class="my-1"
               :key="index"
               v-for="(product, index) in paginatedItems"
@@ -149,6 +152,7 @@
 import {
   getAllProducts,
   getAllBrands,
+  getProductsByFilters
 } from "../services/productService";
 
 export default {
@@ -156,6 +160,8 @@ export default {
     return {
       products: [],
       value: null,
+      start_price: null,
+      end_price: null,
       paginatedItems: this.products,
       currentPage: 1,
       perPage: 6,
@@ -191,6 +197,33 @@ export default {
       this.brandName = response.data;
     },
 
+    // Filter Products
+    async filterProducts() {
+      if (this.selectedPrice == 1) {
+        this.start_price = 0;
+        this.end_price = 10000;
+      } else if (this.selectedPrice == 2) {
+        this.start_price = 10000;
+        this.end_price = 20000;
+      } else if (this.selectedPrice == 3) {
+        this.start_price = 20000;
+        this.end_price = 30000;
+      } else if (this.selectedPrice == 4) {
+        this.start_price = 30000;
+        this.end_price = 40000;
+      } else if (this.selectedPrice == 5) {
+        this.start_price = 40000;
+        this.end_price = 10000000;
+      }
+      const response = await getProductsByFilters(
+        this.selected_brands,
+        this.start_price,
+        this.end_price,
+        this.value
+      );
+      this.products = await response.data;
+      await this.paginate(this.perPage, 0);
+    },
     showDetails(prod_id) {
       this.$router.push({
         name: "ProductDetails",
